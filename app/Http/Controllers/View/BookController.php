@@ -22,11 +22,24 @@ class BookController extends Controller
         $products = Product::where('category_id',$category_id)->get();
         return View('product')->with('products',$products);
     }
-    public  function toproduct($product_id){
+    public  function toproduct(Request $request,$product_id){
         $product = Product::where("id",$product_id)->first();
         $pdt_content = Pdt_content::find($product_id);
         $pdt_images = Pdt_images::where("product_id",$product_id)->get();
-        return View('pdt_content')->with('product',$product)->with('pdt_content',$pdt_content)->with('pdt_images',$pdt_images);
+
+        $bk_cart = $request->cookie('bk_cart');
+        $bk_cart_arr = explode(',',$bk_cart);
+
+        $count = 0;
+        foreach ($bk_cart_arr as $value){
+            $index = strpos($value,':');
+            if ($product_id==substr($value,0,$index))
+            {
+                $count = substr($value,$index+1);
+                break;
+            }
+        }
+        return View('pdt_content')->with('product',$product)->with('pdt_content',$pdt_content)->with('pdt_images',$pdt_images)->with("count",$count);
     }
     /**
      * Display a listing of the resource.

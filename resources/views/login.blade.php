@@ -42,6 +42,7 @@
             var username = $("input[name=username]").val();
             var password = $("input[name=password]").val();
             var code = $("input[name=code]").val();
+
             $.ajax({
                 type: "post",
                 url: 'service/login',
@@ -66,7 +67,9 @@
                     $('.bk_toptips span').html('登录成功');
 
                     setTimeout(function() {$('.bk_toptips').hide();}, 2000);
-                    location.href="category";
+
+                    //购物车登录 需加直接登录。
+                    location.href = "{!!$return_url!!}";
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr);

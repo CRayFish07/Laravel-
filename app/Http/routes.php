@@ -20,8 +20,14 @@ Route::get('category','View\BookController@tocategory');
 Route::get('product/category_id/{category_id}','View\BookController@tobooklist');
 Route::get('register','View\MemberController@toregister');
 Route::get('product/{product_id}','View\BookController@toproduct');
+Route::get('Cart', 'View\CartController@tocart');
 
+//Route::get('Cart', ['middleware'=>'check.login','uses' => 'View\CartController@tocart']);
 
+Route::group(['middleware'=>'check.login'],function (){
+     Route::get('order_commit/{product_id}','View\OrderController@toordercommit');
+     Route::get('order_list', 'View\OrderController@toorderlist');
+});
 
 Route::group(['prefix' => 'service'], function () {
     Route::any('validatacode/create','Service\ValidataCodeController@create');
@@ -30,5 +36,7 @@ Route::group(['prefix' => 'service'], function () {
     Route::post('register','Service\MemberController@register');
     Route::post('login','Service\MemberController@login');
     Route::get('getcategory/parent_id/{parent_id}','Service\BookController@getcategory');
+    Route::get('cart/add/{product_id}','Service\CartController@addcart');
+    Route::get('cart/delete','Service\CartController@delete');
 });
 

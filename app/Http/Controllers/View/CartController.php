@@ -3,19 +3,36 @@
 namespace App\Http\Controllers\View;
 
 use Illuminate\Http\Request;
-use App\Tools\ValidataCode;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Entity\CartItem;
+use App\Entity\Product;
 
-class MemberController extends Controller
+class CartController extends Controller
 {
-    public function tologin(Request $request){
-        $url = $request->input('return_url','');
-        return view('login')->with("return_url",urldecode($url));
-    }
+    public function tocart(Request $request){
+        $bk_cart = $request->cookie('bk_cart');
+        $bk_cart_arr = ($bk_cart=$bk_cart!=null?explode(",",$bk_cart):array());
+        $cartitems = array();
 
-    public function  toregister(){
-        return view("register");
+        $member = $request->session()->get("member","");
+        if ($member!=""){
+
+        }
+        foreach ($bk_cart_arr as $key=>$value){
+            $index = strpos($value,":");
+            $num = substr($value,$index+1);
+
+            $cartitem = new CartItem();
+            $cartitem->id = $key;
+            $cartitem->product_id = substr($value,0,$index);
+            $cartitem->count = $num;
+            $cartitem->product = Product::find($cartitem->product_id);
+            if ($cartitem->product!=null){
+                array_push($cartitems,$cartitem);
+            }
+        }
+        return View('cart')->with("cart_items",$cartitems);
     }
 
     /**
