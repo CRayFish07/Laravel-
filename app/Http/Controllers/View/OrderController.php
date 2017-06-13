@@ -42,6 +42,7 @@ class OrderController extends Controller
             }
         }
         return View("order_commit")->with('cart_items',$cartitem_arr)->with("price",$price);
+        //
     }
 
     /**
